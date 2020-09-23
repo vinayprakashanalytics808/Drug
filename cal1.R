@@ -14,7 +14,7 @@ setwd(paste0(getwd(), "/animal"))
 rm()
 dat <- data.frame()
 df2 <- data.frame()
-for (i in 4){
+for (i in 1){
   dat <- as.data.frame(fromJSON(paste0(getwd(), "/animal/animalandveterinary-event-0001-of-0001.json ","(",i,")/animalandveterinary-event-0001-of-0001.json"), flatten = TRUE))
   df2 <- bind_rows(dat, df2,.id = "col")
   # df <- qpcR:::rbind.na(dat, as.data.frame(do.call("rbind", dat)))
@@ -22,7 +22,7 @@ for (i in 4){
 }
 df2$Index <- 1:nrow(df2)
 df1_final <- as.data.frame(apply(df2,2,as.character))
-writexl::write_xlsx(df1_final, "df_rest.xlsx")
+writexl::write_xlsx(df1_final, "df_sam1.xlsx")
 
 #Results reaction
 df1_final$results.reaction <- as.character(df1_final$results.reaction)

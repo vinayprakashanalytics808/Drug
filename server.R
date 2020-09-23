@@ -24,7 +24,7 @@ shinyServer(function(input, output, session) {
   # }) 
     
       
-  # execute update_summary_table
+  # execu te update_summary_table
     
       output$outcome <-  renderText({
       outcome_sql <- sqlQuery(myconn, paste0("select Outcome, sum(Records) as Records
@@ -85,22 +85,15 @@ shinyServer(function(input, output, session) {
                                                                       [July],[August],[September],[October],[November],[December]))
                                                                       as pt"))
         
-        species_records_date_sql$Total <- rowSums(species_records_date_sql[,2:13])
+        species_records_date_sql$Total <- rowSums(species_records_date_sql[,2:13],na.rm = TRUE)
         # species_records_date_sql$trend <- spk_chr(species_records_date_sql[2:13], type ="line",
         #   chartRangeMin = species_records_date_sql[2], chartRangeMax = species_records_date_sql[13]
         # )
         
-        datatable(species_records_date_sql, escape = FALSE, rownames = FALSE, class = "compact nowrap hover row-border",
-                  options = list(dom = 'ft', searching = FALSE
-#                                  ,fnDrawCallback = htmlwidgets::JS(
-#                     '
-# function(){
-#   HTMLWidgets.staticRender();
-# }
-# '
-#                   )
-                  ,columnDefs = list(list(className = 'dt-center', targets = "_all"))
-                  )) 
+        datatable(species_records_date_sql,escape = FALSE, rownames = FALSE, extensions = c('FixedColumns',"FixedHeader"),
+                  class = "compact nowrap hover row-border",
+                  options = list(paging = TRUE,fixedHeader=TRUE,autowitdth=FALSE, dom = "<f<t>ip>", searching = FALSE,
+                                 columnDefs = list(list(className = 'dt-center', targets = "_all")))) 
         # %>%
         #   spk_add_deps()
         
@@ -119,7 +112,9 @@ shinyServer(function(input, output, session) {
           colnames(species_info_sql)[colnames(species_info_sql) == 'Species'] <- 'label'
           colnames(species_info_sql)[colnames(species_info_sql) == 'Records'] <- 'value'
 
-          amPie(data = species_info_sql, inner_radius = 20, depth = 10,  show_values = FALSE)
+          amPie(data = species_info_sql, inner_radius = 20, depth = 10,  show_values = FALSE) %>%
+            amOptions( main = "Species",
+                       mainColor = "#68838B", mainSize = 15, creditsPosition = "bottom-right")
         })
           
             output$breed_info <-  renderAmCharts({
@@ -131,7 +126,9 @@ shinyServer(function(input, output, session) {
             colnames(breed_info_sql)[colnames(breed_info_sql) == 'breed'] <- 'label'
             colnames(breed_info_sql)[colnames(breed_info_sql) == 'Records'] <- 'value'
             
-            amPie(data = breed_info_sql, inner_radius = 20, depth = 10,  show_values = FALSE)
+            amPie(data = breed_info_sql, inner_radius = 20, depth = 10,  show_values = FALSE) %>%
+              amOptions( main = "Breed",
+                         mainColor = "#68838B", mainSize = 15, creditsPosition = "bottom-right")
           })
             
             
@@ -144,7 +141,9 @@ shinyServer(function(input, output, session) {
               colnames(gender_info_sql)[colnames(gender_info_sql) == 'gender'] <- 'label'
               colnames(gender_info_sql)[colnames(gender_info_sql) == 'Records'] <- 'value'
               
-              amPie(data = gender_info_sql, inner_radius = 20, depth = 10,  show_values = FALSE)
+              amPie(data = gender_info_sql, inner_radius = 20, depth = 10,  show_values = FALSE) %>%
+                amOptions( main = "Gender",
+                           mainColor = "#68838B", mainSize = 15, creditsPosition = "bottom-right")
             })
             
             
@@ -181,6 +180,19 @@ shinyServer(function(input, output, session) {
               max_sql <- sqlQuery(myconn, paste0("select max([Max]) as max_age from [dbo].[fn_min_age]('",input$View,"','",input$View1,"','",input$View2,"')"))
               
               paste(max_sql) 
+            })
+            
+            output$min_of_max <- renderText({
+              min_of_max_sql <- sqlQuery(myconn, paste0("select min(Min_of_Max) as min_age from [dbo].[fn_min_age]('",input$View,"','",input$View1,"','",input$View2,"')"))
+              
+              paste(min_of_max_sql) 
+            })
+            
+            
+            output$max_of_max <- renderText({
+              max_of_max_sql <- sqlQuery(myconn, paste0("select max(Max_of_Max) as max_age from [dbo].[fn_min_age]('",input$View,"','",input$View1,"','",input$View2,"')"))
+              
+              paste(max_of_max_sql) 
             })
   
 })

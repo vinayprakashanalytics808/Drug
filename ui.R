@@ -30,7 +30,7 @@ ui <- dashboardPage(
                                         }"), 
                 tags$style("#par {
                                           border-right: 2px solid grey;
-                                          height:600px;
+                                          height:700px;
                                               }"),
                 tags$style("#species_records td{
                                           line-height: 10px;
@@ -53,10 +53,10 @@ ui <- dashboardPage(
                                                 column(width = 6, tags$h6(tags$a(HTML(paste("Min Age (Max) ", textOutput("max"))))))
                                                 ),
                                               fluidRow(
-                                                column(width = 6, tags$h6(tags$a(HTML(paste("Max Age (Min) ", textOutput("min1")))))),
-                                                column(width = 6, tags$h6(tags$a(HTML(paste("Max Age (Max) ", textOutput("max1"))))))
+                                                column(width = 6, tags$h6(tags$a(HTML(paste("Max Age (Min) ", textOutput("min_of_max")))))),
+                                                column(width = 6, tags$h6(tags$a(HTML(paste("Max Age (Max) ", textOutput("max_of_max"))))))
                                               ),
-                                              br(),br(),
+                                              br(),
                                               htmlOutput("outcome")
                                        ),
                                        column(id = "rec", width = 10, 
@@ -80,9 +80,9 @@ ui <- dashboardPage(
                                               ))
                                        
                                      )),
-                            tabPanel("Summary", 
-                                     verbatimTextOutput("Tab2")),
-                            tabPanel("Table", 
-                                     tableOutput("Tab3"))
+                            tabPanel("Reporter", 
+                                     verbatimTextOutput("Tab2"))
+                            # ,tabPanel("Table", 
+                            #          tableOutput("Tab3"))
                 )
   ))
